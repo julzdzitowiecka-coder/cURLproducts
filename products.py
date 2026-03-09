@@ -22,10 +22,11 @@ def get_products():
     return jsonify(products)
 
 # Example request - http://localhost:5000/products/144 - with method GET
-@app.route('/products/<id>', methods=['GET'])
+@app.route('/products/<int:id>', methods=['GET'])
 def get_product(id):
-    id = int(id)
-    product = [x for x in products if x["id"] == id][0]
+    product = next((x for x in products if x["id"] == id), None)
+    if product is None:
+        return jsonify({"error": "Product not found"}), 404
     return jsonify(product)
 
 # Example request - http://localhost:5000/products - with method POST
@@ -53,4 +54,4 @@ def remove_product(id):
     return '', 204
 
 
-app.run(port=5001,debug=True)
+app.run(port=5000,debug=True)
